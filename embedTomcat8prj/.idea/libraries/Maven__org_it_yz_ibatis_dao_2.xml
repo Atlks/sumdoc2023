@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.it.yz:ibatis-dao:2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/it/yz/ibatis-dao/2/ibatis-dao-2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/it/yz/ibatis-dao/2/ibatis-dao-2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/it/yz/ibatis-dao/2/ibatis-dao-2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
