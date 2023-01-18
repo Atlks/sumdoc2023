@@ -10,81 +10,40 @@ netty svr clnt exmpl code
 # 1. svr   
 
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Maps;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
+class MyBizHandler extends ChannelInboundHandlerAdapter {
+    @Override   // messageReceived
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ByteBuf byteBuf = (ByteBuf) msg;
+        String msg_str = byteBuf.toString(Charset.forName("utf-8"));
+        System.out.println(new Date() + ": 服务端读到数据 -> " + msg_str);
+        //here can save ctx chanel conn and uid...
 
-import java.nio.charset.Charset;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+        if (msg_str.trim().startsWith("{")) {
+            JSONObject jo = JSONObject.parseObject(msg_str);
+            NettyServer.connCtxMap.put(jo.get("uid"), ctx);
+        }
+
+
+        //if msg to other,forword to another ctx
+        //  保留服务段 ctx线程
+    }
+}
 
 public class NettyServer {
 
-    static Map connCtxMap = new HashMap();
+    public   static Map connCtxMap = new HashMap();
+
 
     public static void main(String[] args) {
-        NioEventLoopGroup bossGroup = new NioEventLoopGroup();
-        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
-
-        ServerBootstrap serverBootstrap = new ServerBootstrap();
-        serverBootstrap
-                .group(bossGroup, workerGroup)
-                .channel(NioServerSocketChannel.class)
-                .childHandler(new ChannelInitializer<NioSocketChannel>() {
-                    protected void initChannel(NioSocketChannel ch) {
-
-                        //chanell.addlast( ChannelHandler  xx)
-                        ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
-
-
-                            @Override
-                            public void channelRead(ChannelHandlerContext ctx, Object msg) {
-                                ByteBuf byteBuf = (ByteBuf) msg;
-                                String msg_str = byteBuf.toString(Charset.forName("utf-8"));
-                                System.out.println(new Date() + ": 服务端读到数据 -> " + msg_str);
-                                //here can save ctx chanel conn and uid...
-
-                                if(msg_str.trim().startsWith("{")){
-                                    JSONObject jo = JSONObject.parseObject(msg_str);
-                                    connCtxMap.put(jo.get("uid"),ctx);
-                                }
-
-
-                                //if msg to other,forword to another ctx
-                                //  保留服务段 ctx线程
-                            }
-                        });
-                    }
-                });
-
-
-        new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(3000);
-
-
-                    ChannelHandlerContext ctx = (ChannelHandlerContext) connCtxMap.get(2);
-
-                    ByteBuf buffer = ctx.alloc().buffer();
-                    buffer.writeBytes( ("from svr msg"+new Date().toString()).getBytes()  );
-                    ctx.channel().writeAndFlush(buffer);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-
+               ServerBootstrap serverBootstrap = new ServerBootstrap();
+        serverBootstrap.group(new NioEventLoopGroup(),  new NioEventLoopGroup()).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<NioSocketChannel>() {
+            protected void initChannel(NioSocketChannel ch) {
+                ch.pipeline().addLast(new MyBizHandler());
             }
+        });
 
-        }).start();
+
+
         serverBootstrap.handler(new ChannelInitializer<NioServerSocketChannel>() {
             protected void initChannel(NioServerSocketChannel ch) {
                 System.out.println("svr booting...服务端启动中");
@@ -101,46 +60,60 @@ public class NettyServer {
         serverBootstrap.bind(8000);
 
 
-        //                            @Override   //  channel准备就绪，或者说连接完成。  //here should save conn...and uid map
-//                            public void channelActive(ChannelHandlerContext ctx) {
-//                                // conn ok.. finish .  here should do nothing
-//                                System.out.println("svr send msg发送消息...");
-//
-//
-//                                String msg = "msg from svr  " + new Date();
-//
-//                                ByteBuf buffer = ctx.alloc().buffer();
-//                                buffer.writeBytes(msg.getBytes(Charset.forName("utf-8")));
-//                                // 2. 写数据
-//                                ctx.channel().writeAndFlush(buffer);
-//                                System.out.println("svr send msg发送消息 finish...");
-//                            }
     }
-}
+
+
+    public static void sendMsg(String msg,String connId) {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(3000);
+
+
+                    ChannelHandlerContext ctx = (ChannelHandlerContext) connCtxMap.get(connId);
+
+                    ByteBuf buffer = ctx.alloc().buffer();
+                    buffer.writeBytes(("from svr msg" + new Date().toString()).getBytes());
+                    ctx.channel().writeAndFlush(buffer);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }).start();
+    }
 
 
 
 # 2. clnt code
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Maps;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
+class MyBizHandler33 extends ChannelInboundHandlerAdapter {
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) {
+        //conn finish ,,,save ctx_conn
+        // channelActive  method after   connect()  ....
+        System.out.println(" client conn ok");
+        NettyClient.curConn_ctx = ctx;
 
-import java.nio.charset.Charset;
-import java.util.Date;
-import java.util.Map;
+
+
+        //save ctx for easy invlk outside
+    }
+
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ByteBuf byteBuf = (ByteBuf) msg;
+        //接收服务端的消息并打印 rcv msg
+        System.out.println(byteBuf.toString(Charset.forName("utf-8")));
+    }
+
+}
 
 public class NettyClient {
 
-
-    static ChannelHandlerContext curConn_ctx;
+    public   static ChannelHandlerContext curConn_ctx;
 
     public static void main(String[] args) {
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -154,54 +127,13 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
 
 
-                    @Override
-                    public void initChannel(SocketChannel ch) {
-                        ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
+                             @Override
+                             public void initChannel(SocketChannel ch) {
+                                 ch.pipeline().addLast(new MyBizHandler33());
+                             }
+                         }
 
-
-                            @Override
-                            public void channelActive(ChannelHandlerContext ctx) {
-                                //conn finish ,,,save ctx_conn
-                                // channelActive  method after   connect()  ....
-                                System.out.println(" client conn ok");
-                                curConn_ctx = ctx;
-
-                                new Thread(() -> {
-                                    try {
-                                        Thread.sleep(3000);
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-
-                                    System.out.println("客户端发送消息...");
-                                    // 1. 获取数据
-                                    ByteBuf buffer = curConn_ctx.alloc().buffer();
-                                    // 2. 准备数据，指定字符串的字符集为 utf-8
-                                    Map m = Maps.newConcurrentMap();
-                                    m.put("dt", new Date());
-                                    m.put("uid", 2);
-                                    byte[] bytes = JSONObject.toJSONString(m).getBytes(Charset.forName("utf-8"));
-                                    // 3. 填充数据到 ByteBuf
-                                    buffer.writeBytes(bytes);
-                                    // 2. 写数据
-                                    curConn_ctx.channel().writeAndFlush(buffer);
-                                }).start();
-
-                                //save ctx for easy invlk outside
-                            }
-
-
-                            @Override
-                            public void channelRead(ChannelHandlerContext ctx, Object msg) {
-                                ByteBuf byteBuf = (ByteBuf) msg;
-                                //接收服务端的消息并打印 rcv msg
-                                System.out.println(byteBuf.toString(Charset.forName("utf-8")));
-                            }
-
-
-                        });
-                    }
-                });
+                );
         // 4.建立连接
         bootstrap.connect("127.0.0.1", 8000).addListener(future -> {
             if (future.isSuccess()) {
@@ -213,5 +145,31 @@ public class NettyClient {
                 //重新连接
             }
         });
+    }
+}
+
+
+class sendMsgCls{
+    public static void main(String[] args) {
+        new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            System.out.println("客户端发送消息...");
+            // 1. 获取数据
+            ByteBuf buffer =NettyClient. curConn_ctx.alloc().buffer();
+            // 2. 准备数据，指定字符串的字符集为 utf-8
+            Map m = Maps.newConcurrentMap();
+            m.put("dt", new Date());
+            m.put("uid", 2);
+            byte[] bytes = JSONObject.toJSONString(m).getBytes();
+            // 3. 填充数据到 ByteBuf
+            buffer.writeBytes(bytes);
+            // 2. 写数据
+            NettyClient.curConn_ctx.channel().writeAndFlush(buffer);
+        }).start();
     }
 }

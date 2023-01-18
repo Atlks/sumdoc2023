@@ -12,11 +12,32 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Map;
+class MyBizHandler33 extends ChannelInboundHandlerAdapter {
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) {
+        //conn finish ,,,save ctx_conn
+        // channelActive  method after   connect()  ....
+        System.out.println(" client conn ok");
+        NettyClient.curConn_ctx = ctx;
+
+
+
+        //save ctx for easy invlk outside
+    }
+
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ByteBuf byteBuf = (ByteBuf) msg;
+        //接收服务端的消息并打印 rcv msg
+        System.out.println(byteBuf.toString(Charset.forName("utf-8")));
+    }
+
+}
 
 public class NettyClient {
 
-
-    static ChannelHandlerContext curConn_ctx;
+    public   static ChannelHandlerContext curConn_ctx;
 
     public static void main(String[] args) {
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -30,54 +51,13 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
 
 
-                    @Override
-                    public void initChannel(SocketChannel ch) {
-                        ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
+                             @Override
+                             public void initChannel(SocketChannel ch) {
+                                 ch.pipeline().addLast(new MyBizHandler33());
+                             }
+                         }
 
-
-                            @Override
-                            public void channelActive(ChannelHandlerContext ctx) {
-                                //conn finish ,,,save ctx_conn
-                                // channelActive  method after   connect()  ....
-                                System.out.println(" client conn ok");
-                                curConn_ctx = ctx;
-
-                                new Thread(() -> {
-                                    try {
-                                        Thread.sleep(3000);
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-
-                                    System.out.println("客户端发送消息...");
-                                    // 1. 获取数据
-                                    ByteBuf buffer = curConn_ctx.alloc().buffer();
-                                    // 2. 准备数据，指定字符串的字符集为 utf-8
-                                    Map m = Maps.newConcurrentMap();
-                                    m.put("dt", new Date());
-                                    m.put("uid", 2);
-                                    byte[] bytes = JSONObject.toJSONString(m).getBytes();
-                                    // 3. 填充数据到 ByteBuf
-                                    buffer.writeBytes(bytes);
-                                    // 2. 写数据
-                                    curConn_ctx.channel().writeAndFlush(buffer);
-                                }).start();
-
-                                //save ctx for easy invlk outside
-                            }
-
-
-                            @Override
-                            public void channelRead(ChannelHandlerContext ctx, Object msg) {
-                                ByteBuf byteBuf = (ByteBuf) msg;
-                                //接收服务端的消息并打印 rcv msg
-                                System.out.println(byteBuf.toString(Charset.forName("utf-8")));
-                            }
-
-
-                        });
-
-                });
+                );
         // 4.建立连接
         bootstrap.connect("127.0.0.1", 8000).addListener(future -> {
             if (future.isSuccess()) {
@@ -89,5 +69,31 @@ public class NettyClient {
                 //重新连接
             }
         });
+    }
+}
+
+
+class sendMsgCls{
+    public static void main(String[] args) {
+        new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            System.out.println("客户端发送消息...");
+            // 1. 获取数据
+            ByteBuf buffer =NettyClient. curConn_ctx.alloc().buffer();
+            // 2. 准备数据，指定字符串的字符集为 utf-8
+            Map m = Maps.newConcurrentMap();
+            m.put("dt", new Date());
+            m.put("uid", 2);
+            byte[] bytes = JSONObject.toJSONString(m).getBytes();
+            // 3. 填充数据到 ByteBuf
+            buffer.writeBytes(bytes);
+            // 2. 写数据
+            NettyClient.curConn_ctx.channel().writeAndFlush(buffer);
+        }).start();
     }
 }

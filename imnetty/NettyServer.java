@@ -15,81 +15,84 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
+class MyBizHandler extends ChannelInboundHandlerAdapter {
+    @Override   // messageReceived
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ByteBuf byteBuf = (ByteBuf) msg;
+        String msg_str = byteBuf.toString(Charset.forName("utf-8"));
+        System.out.println(new Date() + ": 服务端读到数据 -> " + msg_str);
+        //here can save ctx chanel conn and uid...
+
+        if (msg_str.trim().startsWith("{")) {
+            JSONObject jo = JSONObject.parseObject(msg_str);
+            NettyServer.connCtxMap.put(jo.get("uid"), ctx);
+        }
+
+
+        //if msg to other,forword to another ctx
+        //  保留服务段 ctx线程
+    }
+}
+
 public class NettyServer {
 
-    static Map connCtxMap = new HashMap();
+    public static Map connCtxMap = new HashMap();
+
 
     public static void main(String[] args) {
-        NioEventLoopGroup bossGroup = new NioEventLoopGroup();
-        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
-        serverBootstrap
-                .group(bossGroup, workerGroup)
-                .channel(NioServerSocketChannel.class)
-                .childHandler(new ChannelInitializer<NioSocketChannel>() {
-                    protected void initChannel(NioSocketChannel ch) {
-
-                        //chanell.addlast( ChannelHandler  xx)
-                        ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
+        serverBootstrap.group(new NioEventLoopGroup(),  new NioEventLoopGroup()).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<NioSocketChannel>() {
+            protected void initChannel(NioSocketChannel ch) {
+                ch.pipeline().addLast(new MyBizHandler());
+            }
+        }).bind(8000);
 
 
-                            @Override
-                            public void channelRead(ChannelHandlerContext ctx, Object msg) {
-                                ByteBuf byteBuf = (ByteBuf) msg;
-                                String msg_str = byteBuf.toString(Charset.forName("utf-8"));
-                                System.out.println(new Date() + ": 服务端读到数据 -> " + msg_str);
-                                //here can save ctx chanel conn and uid...
-
-                                if(msg_str.trim().startsWith("{")){
-                                    JSONObject jo = JSONObject.parseObject(msg_str);
-                                    connCtxMap.put(jo.get("uid"),ctx);
-                                }
-
-
-                                //if msg to other,forword to another ctx
-                                //  保留服务段 ctx线程
-                            }
-                        });
-                    }
-                });
+//        serverBootstrap.handler(new ChannelInitializer<NioServerSocketChannel>() {
+//            protected void initChannel(NioServerSocketChannel ch) {
+//                System.out.println("svr booting...服务端启动中");
+//
+//            }
+//        });
+//
+//        serverBootstrap
+//                //开启TCP底层心跳机制
+//                .childOption(ChannelOption.SO_KEEPALIVE, true)
+//                //开启Nagle算法，如果要求高实时性，有数据发送时就马上发送，就关闭，如果需要减少发送次数减少网络交互，就开启。
+//                .childOption(ChannelOption.TCP_NODELAY, true);
+//
+//        serverBootstrap.bind(8000);
 
 
+    }
+
+
+    public static void sendMsg(String msg, String connId) {
         new Thread(() -> {
             while (true) {
                 try {
                     Thread.sleep(3000);
 
 
-                    ChannelHandlerContext ctx = (ChannelHandlerContext) connCtxMap.get(2);
+                    ChannelHandlerContext ctx = (ChannelHandlerContext) connCtxMap.get(connId);
 
                     ByteBuf buffer = ctx.alloc().buffer();
-                    buffer.writeBytes( ("from svr msg"+new Date().toString()).getBytes()  );
+                    buffer.writeBytes(("from svr msg" + new Date().toString()).getBytes());
                     ctx.channel().writeAndFlush(buffer);
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             }
 
         }).start();
-        serverBootstrap.handler(new ChannelInitializer<NioServerSocketChannel>() {
-            protected void initChannel(NioServerSocketChannel ch) {
-                System.out.println("svr booting...服务端启动中");
-
-            }
-        });
-
-        serverBootstrap
-                //开启TCP底层心跳机制
-                .childOption(ChannelOption.SO_KEEPALIVE, true)
-                //开启Nagle算法，如果要求高实时性，有数据发送时就马上发送，就关闭，如果需要减少发送次数减少网络交互，就开启。
-                .childOption(ChannelOption.TCP_NODELAY, true);
-
-        serverBootstrap.bind(8000);
+    }
 
 
-        //                            @Override   //  channel准备就绪，或者说连接完成。  //here should save conn...and uid map
+    //                            @Override   //  channel准备就绪，或者说连接完成。  //here should save conn...and uid map
 //                            public void channelActive(ChannelHandlerContext ctx) {
 //                                // conn ok.. finish .  here should do nothing
 //                                System.out.println("svr send msg发送消息...");
@@ -103,5 +106,4 @@ public class NettyServer {
 //                                ctx.channel().writeAndFlush(buffer);
 //                                System.out.println("svr send msg发送消息 finish...");
 //                            }
-    }
 }
