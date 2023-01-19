@@ -6,9 +6,15 @@ im聊天软件技术栈
 
 
 
+# 长轮询(comet)、长连接(SSE
 
-# 1. 使用netty mina 来实现 麻烦
+ [web通讯的四种方式，短轮询、长轮询(comet)、长连接(SSE)、WebSocket] 
+
 mina比较简单，netty更复杂。  java nio api also dift use...
+
+
+
+是第三种风格的*Comet*。这通常被称为流（streaming）。按照这种风格，服务器将数据推回客户机，但是不关闭*连接*。*连*
 
 
 # 2. 使用mq机制更加简单 vs mina模式
@@ -26,6 +32,19 @@ redis 是一款轻量级内存组件，相信你一定也经常使用，使用�
 多样性，可根据需求选择底层队列结构
 
 
+
+bcs mq base on netty
+
+
+
+Rocketmq的通信协议和方法分析
+
+ 
+订阅专栏
+根据rocketmq的模块设计，其通信相关的代码放在源码包下的rocketmq-remoting模块。主要内容包括了编解码处理，使用了nety框架对接收发送消息的处理等。其类图见下：
+ 
+
+
 # 3. 使用redis mq 最轻便的
 
 
@@ -37,6 +56,10 @@ redis 是一款轻量级内存组件，相信你一定也经常使用，使用�
  # 识别恶意用户踢掉的问题。。断掉其链接
 
 use kill client mode
+
+
+
+## 只能接收不能发送   ，限制一个IP链接数量
 
 
 ## 3.1. 列出所有已连接客户端
