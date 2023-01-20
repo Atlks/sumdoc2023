@@ -1,18 +1,30 @@
 http 长连接 长轮询技术
 
+[toc]
+
+# 因为比起mq和ws简单很多。。。
 
 
-因为比起mq和ws简单很多。。。
+
+## comet 和 sse实现都麻烦
+
+不好找到code
 
 
 
-comet 实现麻烦
-
-sse实现麻烦
-
-使用CountDownLatch 阻塞来实现  最简单了
+# 实现方式
 
 
+
+## **LinkedBlockingQueue** 最简单
+
+底层是线程的wait  notify等。。
+
+监听mq。如果有了立马回调http输出。。。消息要是有queue存储。。topic会丢失历史消息
+
+## 使用CountDownLatch 阻塞 
+
+底层是线程的wait  notify等。。
 
 
 
