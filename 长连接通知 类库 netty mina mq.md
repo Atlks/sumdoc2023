@@ -15,7 +15,7 @@ df
 业务逻辑编排层 Service ChannelHandler：业务逻辑编排层通常有两类，一类是纯粹的业务逻辑编排，还有一类是其他的应用层协议插件，用于特定协议相关的会话和链路管理
 
 
-# mina vs netty
+# 1. mina vs netty
 
 mina的代码很简洁。。。netty的代码好啰嗦了。。。
 mina的是命令式样代码。。netty的函数式样
