@@ -4,6 +4,21 @@ bk prgrmlan->istrct  zilin
 
 [toc]
 
+<!-- TOC -->
+
+- [idx](#idx)
+- [分类法1  全局命令 未认证状态命令 未认证状态命令 选中状态指令](#分类法1--全局命令-未认证状态命令-未认证状态命令-选中状态指令)
+- [----常见分类法2 by fuc](#----常见分类法2-by-fuc)
+- [数据传送指令 。移动 赋值类](#数据传送指令-移动-赋值类)
+- [运算指令  (算术   逻辑  移位运算)](#运算指令--算术---逻辑--移位运算)
+- [控制指令 。。流程跳转比较指令](#控制指令-流程跳转比较指令)
+- [Oo指令 (oo lan need)](#oo指令-oo-lan-need)
+- [other instkt](#other-instkt)
+- [comm lan inst amt](#comm-lan-inst-amt)
+- [ref](#ref)
+
+<!-- /TOC -->
+
 
 
 指令集（IA：InstructionSet）是指CPU指令系统所能识别（翻译）执行的全部指令的集合
