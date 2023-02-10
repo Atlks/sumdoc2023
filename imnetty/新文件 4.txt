@@ -1,0 +1,5 @@
+
+
+
+REPLACE 语句  推荐，简单方便 直接替换insert
+或merge语句   在 MySQL 中，不支持 MERGE，我们应用 INSERT…..ON DUPLICATE KEY UPDATE
