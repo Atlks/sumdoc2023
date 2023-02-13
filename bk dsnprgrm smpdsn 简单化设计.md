@@ -1,0 +1,1 @@
+bk dsnprgrm smpdsn 简单化设计
