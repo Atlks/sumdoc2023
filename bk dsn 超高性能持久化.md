@@ -46,7 +46,10 @@ java中bufferedWriter.write()写入数据到文件中，由于缓冲区大小有
 | mysql dft | 1k ps |
 
 
-自己实现netty+bufferfile。。。。90w 5s...每秒18w
+自己实现netty+bufferfile。。。。90w 5s...每秒18w dt
+16m /s  /s /
+
+netty+leavedb maybe better
 
 
 # 持久化机制可以 每隔 几秒s持久化
