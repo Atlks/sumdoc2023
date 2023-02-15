@@ -9,7 +9,26 @@ mysql no trans perf
 
 <!-- /TOC -->
 
+
+
+[toc]
+
 def
+
+# table
+
+| db | pef tms per sec|
+|---|---|
+|rds| 4.5w ps|
+| mysql mmr | 3w ps |
+| mysql trx0 nochk| 3w ps |
+| mgdb | 1.5w ps |
+| file append | 1.5w ps |
+| msql perf n mltThrdPool | 1.5w ps |
+| mysql dft | 1k ps |
+
+调整隔离级别还是有用的。。可能50%的提升率。。。
+
 
 # insert 1w  11s
 
@@ -160,6 +179,9 @@ innodb_buffer_pool_size=1024M(1G)
 、改写所有insert语句为insert delayed
 这个insert delayed不同之处在于：立即返回结果，后台进行处理插入。
 
+# write file append 9wdt 5s
+sprs..maybe no cache
+
 # 没啥作用测试。的参数
 
 
@@ -179,3 +201,30 @@ innodb_log_buffer_size=800M
 Innodb_write_io_threads  没啥用 
 
 
+# call sp ywe slow........50s omg
+# close many ywesu
+
+
+aria_checkpoint_interval
+no null check
+
+# 
+
+#  last final
+
+only  innodb_flush_log_at_trx_commit=0
+and delete ywesu check ,,just can 3s like memry db...
+another thread adj not need  trans leve not need adj to read uncommit...
+
+
+[mysqld]
+#bulk_insert_buffer_size=500M
+#thread_concurrency=24
+# innodb_write_io_threads=24
+max_heap_table_size=1024M
+innodb_flush_log_at_trx_commit=0
+# transaction-isolation = READ-UNCOMMITTED
+port=3306
+
+
+由于 InnoDB 不支持 INSERT DELAYED，因此使用大型 InnoDB 缓冲池是最接近 INSERT DELAYED 的方法。所有 DML（插入、更新和删除）都将缓存在 InnoDB 缓冲池中。写入的事务信息会立即写入重做日志（ib_logfile0、ib_logfile1
