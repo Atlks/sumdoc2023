@@ -1,3 +1,5 @@
+package ori;
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import io.netty.bootstrap.Bootstrap;

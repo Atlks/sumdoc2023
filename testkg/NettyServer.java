@@ -1,15 +1,18 @@
-package ori;
+package testkg;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,8 +20,23 @@ import java.util.Map;
 
 
 class MyBizHandler extends ChannelInboundHandlerAdapter {
+
+    BufferedWriter bw;
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws  Exception {
+        //conn finish ,,,save ctx_conn
+        // channelActive  method after   connect()  ....
+        System.out.println("   conn ok");
+
+
+        //写入流,设置缓存区大小为1024K
+          bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("dt2025_90w.txt",true)),1024);
+
+
+        //save ctx for easy invlk outside
+    }
     @Override   // messageReceived
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws  Exception {
         ByteBuf byteBuf = (ByteBuf) msg;
         String msg_str = byteBuf.toString(Charset.forName("utf-8"));
         System.out.println(new Date() + ": 服务端读到数据 -> " + msg_str);
@@ -29,7 +47,12 @@ class MyBizHandler extends ChannelInboundHandlerAdapter {
             NettyServer.connCtxMap.put(jo.get("uid"), ctx);
         }
 
+        bw.write(msg_str);
+        bw.newLine();//输出换行，内部调用System.getProperty("line.separator")
 
+
+        //3.刷新缓存区 auto by cache size
+          bw.flush();
         //if msg to other,forword to another ctx
         //  保留服务段 ctx线程
     }
@@ -40,7 +63,11 @@ public class NettyServer {
     public static Map connCtxMap = new HashMap();
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws  Exception {
+
+        //1.创建BufferedWriter类型的对象与c:/a.txt文件关联，true代表可以追加，
+        //写入流,设置缓存区大小为1024K
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("dt2024_900w.txt",true)),10240);
 
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();

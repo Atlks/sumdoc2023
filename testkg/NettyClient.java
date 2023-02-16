@@ -1,4 +1,4 @@
-package netyNlvdb;
+package testkg;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Map;
 class MyBizHandler33 extends ChannelInboundHandlerAdapter {
-    Logger logger = LoggerFactory.getLogger(MyBizHandler33.class);
+    Logger logger = LoggerFactory.getLogger(IstTestFl.class);
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         //conn finish ,,,save ctx_conn

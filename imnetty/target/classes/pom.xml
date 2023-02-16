@@ -77,6 +77,20 @@
 
 
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-messaging</artifactId>
+			<version>6.0.3</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-websocket</artifactId>
+			<version>6.0.3</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>com.sparkjava</groupId>
 			<artifactId>spark-core</artifactId>
 			<version>2.9.4</version>
@@ -121,6 +135,16 @@
 		</dependency>
 
 		<!-- #############################################  io   net http -->
+	<!--
+		<dependency>
+			<groupId>org.glassfish.grizzly</groupId>
+			<artifactId>grizzly-http-server</artifactId>
+			<version>2.4.0</version>
+			<type>bundle</type>
+		</dependency>
+		-->
+		<!-- https://mvnrepository.com/artifact/org.iq80.leveldb/leveldb -->
+
 
 		<dependency>
 			<groupId>org.eclipse.paho</groupId>
@@ -147,15 +171,45 @@
 			<version>4.5.14</version>
 		</dependency>
 
-
+      <!--
 		<dependency>
 			<groupId>com.atlassian.selenium</groupId>
 			<artifactId>atlassian-webdriver-core</artifactId>
 			<version>3.3.0</version>
 			<scope>test</scope>
 		</dependency>
+-->
+
+
+
 
 		<!-- #############################################  io db  -->
+
+
+		<dependency>
+			<groupId>org.iq80.leveldb</groupId>
+			<artifactId>leveldb</artifactId>
+			<version>0.12</version>
+		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/org.fusesource.leveldbjni/leveldbjni-all -->
+		<dependency>
+			<groupId>org.fusesource.leveldbjni</groupId>
+			<artifactId>leveldbjni-all</artifactId>
+			<version>1.8</version>
+		</dependency>
+
+		<!--
+
+            <dependency>
+                        <groupId>org.fusesource.leveldbjni</groupId>
+                        <artifactId>leveldbjni-linux64</artifactId>
+                        <version>1.8</version>
+                    </dependency>
+
+
+        -->
 
 
 		<dependency>

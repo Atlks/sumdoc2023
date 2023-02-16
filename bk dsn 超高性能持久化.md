@@ -46,6 +46,7 @@ java中bufferedWriter.write()写入数据到文件中，由于缓冲区大小有
 | mysql dft | 1k ps |
 
 
+Grizzly+leveldb应该是最快的。。。grizzly简单。。。leveldb是lsm db engierr最快了。。
 自己实现netty+bufferfile。。。。90w 5s...每秒18w dt
 16m /s  /s /
 

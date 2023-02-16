@@ -1,6 +1,34 @@
 bk dsn arch dsn  n dbg
 
+<!-- TOC -->
 
+- [smp arch   ,双层结构](#smp-arch---双层结构)
+    - [控制调用链深度3层 biz db](#控制调用链深度3层-biz-db)
+    - [cs arch more easy](#cs-arch-more-easy)
+    - [h5 rest mgdb rds](#h5-rest-mgdb-rds)
+    - [script vs complit java](#script-vs-complit-java)
+    - [process vs oo](#process-vs-oo)
+    - [single vs mlt file mode](#single-vs-mlt-file-mode)
+    - [biz+util mode..](#bizutil-mode)
+    - [mlt lan mlt micrsvr  ..svrless mode](#mlt-lan-mlt-micrsvr--svrless-mode)
+- [...... DBG.....](#-dbg)
+    - [INVOKE process stack trace N cur varlst](#invoke-process-stack-trace-n-cur-varlst)
+    - [debug mode  vs  log mode](#debug-mode--vs--log-mode)
+        - [db log as log](#db-log-as-log)
+        - [console print mode](#console-print-mode)
+        - [sql as biz script can easy log in mysql open log file..](#sql-as-biz-script-can-easy-log-in-mysql-open-log-file)
+        - [web acc log url as biz scrpt](#web-acc-log-url-as-biz-scrpt)
+        - [vm lejye api write log...](#vm-lejye-api-write-log)
+    - [使用拦截器来log  埋点](#使用拦截器来log--埋点)
+        - [trigger  ,web filter ，db trigger](#trigger--web-filter-db-trigger)
+        - [vm invoke 语句api接口](#vm-invoke-语句api接口)
+        - [db driver 拦截埋点](#db-driver-拦截埋点)
+- [。。。。dsl log mode](#dsl-log-mode)
+    - [web accs log   url log and param](#web-accs-log---url-log-and-param)
+    - [vm log medthod)(param)](#vm-log-medthodparam)
+    - [sql log](#sql-log)
+
+<!-- /TOC -->
 
 编程中最困难   架构设计，紧随其后的是Debug（代码调试）
 
@@ -12,9 +40,40 @@ bk dsn arch dsn  n dbg
 
 # smp arch   ,双层结构
 
-# cs arch more easy
+## 控制调用链深度3层 biz db
 
-# h5 rest mgdb rds
+## cs arch more easy
+
+## h5 rest mgdb rds
+
+## script vs complit java
+## process vs oo
+
+## single vs mlt file mode
+
+##  biz+util mode..
+## mlt lan mlt micrsvr  ..svrless mode
+
+# ......DBG.....    
+
+##  INVOKE process stack trace N cur varlst
+
+##  debug mode  vs  log mode
+### db log as log
+### console print mode
+### sql as biz script can easy log in mysql open log file..
+### web acc log url as biz scrpt
+### vm lejye api write log...
 
 
+## 使用拦截器来log  埋点
+### trigger  ,web filter ，db trigger
+### vm invoke 语句api接口
+### db driver 拦截埋点
 
+
+# 。。。。dsl log mode
+
+## web accs log   url log and param
+##    vm log medthod)(param)
+##   sql log   

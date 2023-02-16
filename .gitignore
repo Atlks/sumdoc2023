@@ -2,3 +2,14 @@ node_modules
 /node_modules
 node_modules/
 artid/target/classes/application.properties.bak
+
+\*.class
+*.class
+imnetty/target/classes
+imnetty/target/classes/Handler_Http.class
+imnetty/target/
+imnetty/target
+imnetty/target/classes/
+imnetty/target/classes/*.*
+imnetty/target/classes/*
+imnetty/.idea/
