@@ -3,9 +3,11 @@ dbg method n tool
 <!-- TOC -->
 
 - [dbg method](#dbg-method)
-    - [method invoke trace n param](#method-invoke-trace-n-param)
-    - [log dft gene log](#log-dft-gene-log)
-    - [error invoke StackList](#error-invoke-stacklist)
+    - [** method invoke trace n param](#-method-invoke-trace-n-param)
+    - [use log dft gene log](#use-log-dft-gene-log)
+    - [error invoke StackList  n cur param](#error-invoke-stacklist--n-cur-param)
+    - [use api to trace invoke](#use-api-to-trace-invoke)
+    - [use tool to trace meth(param)](#use-tool-to-trace-methparam)
 - [.... log](#-log)
     - [web acc url n param](#web-acc-url-n-param)
     - [vm log dft no](#vm-log-dft-no)
@@ -17,14 +19,17 @@ dbg method n tool
     - [api埋点](#api埋点)
 - [gui tool](#gui-tool)
 - [java dbg tool](#java-dbg-tool)
+    - [IDE调试器 jvisual agent](#ide调试器-jvisual-agent)
 
 <!-- /TOC -->
 
 # dbg method 
 
-## method invoke trace n param
-## log dft gene log 
-## error invoke StackList 
+## ** method invoke trace n param
+## use log dft gene log 
+## error invoke StackList  n cur param
+## use api to trace invoke
+## use tool to trace meth(param)
 
 
 # .... log
@@ -45,8 +50,7 @@ dbg method n tool
 
 # java dbg tool
 
-
- IDE调试器
+## IDE调试器 jvisual agent
  jvisual.exe 
 
  ，agent是其中很重要的一个模块

@@ -2,7 +2,12 @@ bk dsn arch dsn  n dbg
 
 <!-- TOC -->
 
-- [smp arch   ,双层结构](#smp-arch---双层结构)
+- [------------arch smp](#------------arch-smp)
+- [smp prgrm ,script lan](#smp-prgrm-script-lan)
+- [smp lib.](#smp-lib)
+- [smp  双层结构 ,invoke deep nomore 3](#smp--双层结构-invoke-deep-nomore-3)
+- [smp db, rds mgdb  sqlite file](#smp-db-rds-mgdb--sqlite-file)
+- [smp net io...http vs socket](#smp-net-iohttp-vs-socket)
     - [控制调用链深度3层 biz db](#控制调用链深度3层-biz-db)
     - [cs arch more easy](#cs-arch-more-easy)
     - [h5 rest mgdb rds](#h5-rest-mgdb-rds)
@@ -38,7 +43,13 @@ bk dsn arch dsn  n dbg
 第三  digging api 你需要的
 
 
-# smp arch   ,双层结构
+# ------------arch smp
+
+# smp prgrm ,script lan
+# smp lib.
+# smp  双层结构 ,invoke deep nomore 3
+# smp db, rds mgdb  sqlite file
+# smp net io...http vs socket
 
 ## 控制调用链深度3层 biz db
 
