@@ -8,11 +8,69 @@ read spec line from large file
 
 <!-- TOC -->
 
+- [RandomAccessFile 强烈推荐。。千万行数据，1ms读取到](#randomaccessfile-强烈推荐千万行数据1ms读取到)
+- [读取特定行从大文件  Stream.skip(n)  推荐快速 简单 千万数据2s](#读取特定行从大文件--streamskipn--推荐快速-简单-千万数据2s)
+- [apache.commons.io.LineIterator;](#apachecommonsiolineiterator)
 - [Scanner扫描器](#scanner扫描器)
-- [读取特定行从大文件  Stream.skip(n)](#读取特定行从大文件--streamskipn)
 - [BufferedReader reaa then skip some line](#bufferedreader-reaa-then-skip-some-line)
 
 <!-- /TOC -->
+
+
+
+
+# RandomAccessFile 强烈推荐。。千万行数据，1ms读取到
+
+  RandomAccessFile raf=new RandomAccessFile("dt217_900w.txt", "r");
+        //获取RandomAccessFile对象文件指针的位置，初始位置是0
+      //  System.out.println("RandomAccessFile文件指针的初始位置:"+raf.getFilePointer());
+        raf.seek(886 * 10000*87);//移动文件指针位置
+        System.out.println(raf.readLine());System.out.println(raf.readLine());
+
+       logger.info("===================mid.....");
+
+
+# 读取特定行从大文件  Stream.skip(n)  推荐快速 简单 千万数据2s
+
+Reading the Nth line from a file in Java
+
+
+
+  
+        logger.info("===================mid.....");
+        Stream<String> lines = Files.lines(Paths.get("dt217_900w.txt"));
+        line = lines.skip(886 * 10000).findFirst().get();
+        System.out.println(line);
+
+
+        logger.info("===================end.....");
+
+try (Stream<String> lines = Files.lines(Paths.get("file.txt"))) {
+        line = lines.skip(n).findFirst().get();
+        System.out.println(line);
+      }
+
+
+      In the code above, lines.skip is used to jump n lines from the start of the file. Just as before, the get() method returns a string.
+
+# apache.commons.io.LineIterator;
+
+   //   logger.info("===================mid.....");
+        int n = -1;
+        LineIterator iterator = FileUtils.lineIterator(new File("dt217_900w.txt"), "UTf-8");
+        while (iterator.hasNext()) {
+            n++;
+            if (n < 886 * 10000)
+            {
+                iterator.nextLine(); continue;
+            }
+
+            else {
+                  line = iterator.nextLine();
+                System.out.println(line);
+                break;
+            }
+        }
 
 # Scanner扫描器
 使用Scanner类可以实现在 Java 中逐行读取文件的最简单方法之一。扫描仪使用定界符模式将其输入分解为标记，在我们的例子中是换行符：
@@ -29,17 +87,6 @@ while (scanner.hasNextLine()) {
 由于此方法继续在输入中搜索行分隔符，因此如果不存在行分隔符，它可能会在搜索行尾时缓冲所有输入。
 
 
-# 读取特定行从大文件  Stream.skip(n)
-
-Reading the Nth line from a file in Java
-
-try (Stream<String> lines = Files.lines(Paths.get("file.txt"))) {
-        line = lines.skip(n).findFirst().get();
-        System.out.println(line);
-      }
-
-
-      In the code above, lines.skip is used to jump n lines from the start of the file. Just as before, the get() method returns a string.
 
 # BufferedReader reaa then skip some line
       ava 7 users, the BufferedReader class can be used to retrieve a particular line of text.
