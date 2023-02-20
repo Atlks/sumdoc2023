@@ -13,6 +13,7 @@ import com.im.action.login.RegAction;
 import com.im.action.news.CategoryAction;
 import com.im.action.news.NewsAction;
 import com.im.action.news.NewsFlashAction;
+import com.im.action.payment.GetOrderDetailAction;
 import com.im.action.payment.GetPayTypeAction;
 import com.im.action.payment.SendPendingOrderAction;
 import com.im.action.redpacket.AddRedPacketAction;
@@ -58,11 +59,11 @@ public class TmctEmbd {
         System.out.println(org.slf4j.helpers.MessageFormatter.class);
         System.out.println(com.google.protobuf.AbstractMessageLite.class);
         System.out.println(javax.servlet.ServletContext.class);
-        System.out.println( org.apache.bcel.util.InstructionFinder.class);
+        System.out.println(org.apache.bcel.util.InstructionFinder.class);
         System.out.println(BizConfig.isDevelop());
         //  D:\im-server-core\im-task\lib\protobuf-java-3.0.0.jar  jeig err..  AvailableCoinAction
 
-        String json ="{\"createTime\":\"Mar 17, 2022 4:15:46 PM\"}";
+        String json = "{\"createTime\":\"Mar 17, 2022 4:15:46 PM\"}";
 //        NewsTag x = GlobalConstants.GSON.fromJson(json, NewsTag.class);
 //        System.out.println(x); ;
         //slf 1.4 err...1.6.4 err...m yabe only 1.5.6 is ok...
@@ -86,96 +87,104 @@ public class TmctEmbd {
         //-----------------------------api 2
 
 
-        postx("/im-biz/sys/getSmsCode", new GetSmsCodeAction(),tomcat, ctx_webapp);
-        postx("/im-biz/sys/updateUserKeyPair", new UpdateUserKeyPairAction(),tomcat, ctx_webapp);
-        postx("/im-biz/sys/checkVersion", new CheckVersionAction(),tomcat, ctx_webapp);
-        postx("/im-biz/sys/openInstall", new OpenInstallAction(),tomcat, ctx_webapp);
-        postx("/im-biz/sys/getKeyPairOfVer", new GetKeyPairOfVerAction(),tomcat, ctx_webapp);
-        postx("/im-biz/sys/getEmailCode", new GetEmailCodeAction(),tomcat, ctx_webapp);
-        postx("/im-biz/sys/googleAuthQrCode", new GoogleAuthQrCodeAction(),tomcat, ctx_webapp);
+        postx("/im-biz/sys/getSmsCode", new GetSmsCodeAction(), tomcat, ctx_webapp);
+        postx("/im-biz/sys/updateUserKeyPair", new UpdateUserKeyPairAction(), tomcat, ctx_webapp);
+        postx("/im-biz/sys/checkVersion", new CheckVersionAction(), tomcat, ctx_webapp);
+        postx("/im-biz/sys/openInstall", new OpenInstallAction(), tomcat, ctx_webapp);
+        postx("/im-biz/sys/getKeyPairOfVer", new GetKeyPairOfVerAction(), tomcat, ctx_webapp);
+        postx("/im-biz/sys/getEmailCode", new GetEmailCodeAction(), tomcat, ctx_webapp);
+        postx("/im-biz/sys/googleAuthQrCode", new GoogleAuthQrCodeAction(), tomcat, ctx_webapp);
 
 
+        postx("/im-biz/login/login", new LoginAction(), tomcat, ctx_webapp);
+        postx("/im-biz/login/getUrls", new GetUrlsAction(), tomcat, ctx_webapp);
+        postx("/im-biz/login/reg", new RegAction(), tomcat, ctx_webapp);
+        postx("/im-biz/login/logout", new LogoutAction(), tomcat, ctx_webapp);
 
 
-
-        postx("/im-biz/login/login", new LoginAction(),tomcat, ctx_webapp);
-        postx("/im-biz/login/getUrls", new GetUrlsAction(),tomcat, ctx_webapp);
-        postx("/im-biz/login/reg", new RegAction(),tomcat, ctx_webapp);
-        postx("/im-biz/login/logout", new LogoutAction(),tomcat, ctx_webapp);
-
-
-        postx("/im-biz/contacts/contactsList", new ContactsListAction(),tomcat, ctx_webapp);
-        postx("/im-biz/contacts/contactsApplyList", new ContactsApplyListAction(),tomcat, ctx_webapp);
+        postx("/im-biz/contacts/contactsList", new ContactsListAction(), tomcat, ctx_webapp);
+        postx("/im-biz/contacts/contactsApplyList", new ContactsApplyListAction(), tomcat, ctx_webapp);
         postx("/im-biz/group/groupContactList", new
-                GroupContactListAction(),tomcat, ctx_webapp);
-        postx("/im-biz/contacts/findContactsList", new FindContactsListAction(),tomcat, ctx_webapp);
-        postx("/im-biz/contacts/mobileContacts", new MobileContactsAction(),tomcat, ctx_webapp);
-        postx("/im-biz/contacts/contactsDetail", new ContactsDetailAction(),tomcat, ctx_webapp);
-        postx("/im-biz/contacts/contactsRelation", new ContactsRelationAction(),tomcat, ctx_webapp);
-        postx("/im-biz/contacts/unAuditDetail", new UnAuditDetailAction(),tomcat, ctx_webapp);
-        postx("/im-biz/contacts/updateContactsApply", new UpdateContactsApplyAction(),tomcat, ctx_webapp);
+                GroupContactListAction(), tomcat, ctx_webapp);
+        postx("/im-biz/contacts/findContactsList", new FindContactsListAction(), tomcat, ctx_webapp);
+        postx("/im-biz/contacts/mobileContacts", new MobileContactsAction(), tomcat, ctx_webapp);
+        postx("/im-biz/contacts/contactsDetail", new ContactsDetailAction(), tomcat, ctx_webapp);
+        postx("/im-biz/contacts/contactsRelation", new ContactsRelationAction(), tomcat, ctx_webapp);
+        postx("/im-biz/contacts/unAuditDetail", new UnAuditDetailAction(), tomcat, ctx_webapp);
+        postx("/im-biz/contacts/updateContactsApply", new UpdateContactsApplyAction(), tomcat, ctx_webapp);
 
 
+        postx("/im-biz/user/update", new UpdateAction(), tomcat, ctx_webapp);
+        postx("/im-biz/user/detail", new DetailAction(), tomcat, ctx_webapp);
+        postx("/im-biz/user/getEmoticon", new GetEmoticonAction(), tomcat, ctx_webapp);
+        postx("/im-biz/user/bindEmail", new BindEmailAction(), tomcat, ctx_webapp);
+        postx("/im-biz/user/tradePassword", new TradePasswordAction(), tomcat, ctx_webapp);
 
 
-
-        postx("/im-biz/user/update", new UpdateAction(),tomcat, ctx_webapp);
-        postx("/im-biz/user/detail", new DetailAction(),tomcat, ctx_webapp);
-        postx("/im-biz/user/getEmoticon", new GetEmoticonAction(),tomcat, ctx_webapp);
-        postx("/im-biz/user/bindEmail", new BindEmailAction(),tomcat, ctx_webapp);
-        postx("/im-biz/user/tradePassword", new TradePasswordAction(),tomcat, ctx_webapp);
+        postx("/im-biz/news/newsFlash", new NewsFlashAction(), tomcat, ctx_webapp);
+        postx("/im-biz/news/news", new NewsAction(), tomcat, ctx_webapp);
+        postx("/im-biz/news/category", new CategoryAction(), tomcat, ctx_webapp);
 
 
-
-        postx("/im-biz/news/newsFlash", new NewsFlashAction(),tomcat, ctx_webapp);
-        postx("/im-biz/news/news", new NewsAction(),tomcat, ctx_webapp);
-        postx("/im-biz/news/category", new CategoryAction(),tomcat, ctx_webapp);
-
-
-        
-        postx("/im-biz/wallet/userWallet", new UserWalletAction(),tomcat, ctx_webapp);
-        postx("/im-biz/wallet/availableCoin", new AvailableCoinAction(),tomcat, ctx_webapp);
-        postx("/im-biz/wallet/userBankCardList", new UserBankCardListAction(),tomcat, ctx_webapp);
-        postx("/im-biz/payment/getPayType", new GetPayTypeAction(),tomcat, ctx_webapp);
-        postx("/im-biz/redpacket/addRedPacket", new AddRedPacketAction(),tomcat, ctx_webapp);
-        postx("/im-biz/redpacket/redPacketTemplateList", new RedPacketTemplateListAction(),tomcat, ctx_webapp);
-        postx("/im-biz/payment/sendPendingOrder", new SendPendingOrderAction(),tomcat, ctx_webapp);
-      
+        postx("/im-biz/wallet/userWallet", new UserWalletAction(), tomcat, ctx_webapp);
+        postx("/im-biz/wallet/availableCoin", new AvailableCoinAction(), tomcat, ctx_webapp);
+        postx("/im-biz/wallet/userBankCardList", new UserBankCardListAction(), tomcat, ctx_webapp);
+        postx("/im-biz/payment/getPayType", new GetPayTypeAction(), tomcat, ctx_webapp);
+        postx("/im-biz/redpacket/addRedPacket", new AddRedPacketAction(), tomcat, ctx_webapp);
+        postx("/im-biz/redpacket/redPacketTemplateList", new RedPacketTemplateListAction(), tomcat, ctx_webapp);
+        postx("/im-biz/payment/sendPendingOrder", new SendPendingOrderAction(), tomcat, ctx_webapp);
+        postx("/im-biz/payment/getOrderDetailAction", new GetOrderDetailAction(), tomcat, ctx_webapp);
 
 
-   setGetM( tomcat, ctx_webapp ,"/m",  (req, res) -> {
-       //连接本地的 Redis 服务
-       Jedis jedis = new Jedis("localhost");
-       // 如果 Redis 服务设置了密码，需要下面这行，没有就不需要
-       jedis.auth("kPrbMjTIrCcrcBl88Dsc");
-       System.out.println("连接成功");
-       //查看服务是否运行
-       System.out.println("服务正在运行: " + jedis.ping());
+        setGetM( "/rcv", (req, res) -> {
+            //连接本地的 Redis 服务
+            Jedis jedis = new Jedis("localhost");
+            // 如果 Redis 服务设置了密码，需要下面这行，没有就不需要
+            jedis.auth("kPrbMjTIrCcrcBl88Dsc");
+            System.out.println("连接成功");
+            //查看服务是否运行
+            System.out.println("服务正在运行: " + jedis.ping());
 
-       System.out.println(jedis.get("fgfkkk"));
+            System.out.println(jedis.get("fgfkkk"));
 
 //while(true){
-       Object msgx = jedis.brpoplpush("msgx", "msgxHstry", 10);
+            Object msgx = jedis.brpoplpush("msgx", "msgxHstry", 10);
 
-       String msg = JSONObject.toJSONString(msgx);
-       System.out.println(msg);
+            String msg = JSONObject.toJSONString(msgx);
+            System.out.println(msg);
 
-       return msg;
-   });
+            return msg;
+        },tomcat, ctx_webapp);
+
+
+
+        setGetM( "/sendmsg", (req, res) -> {
+            //连接本地的 Redis 服务
+            Jedis jedis = new Jedis("localhost");
+            // 如果 Redis 服务设置了密码，需要下面这行，没有就不需要
+            jedis.auth("kPrbMjTIrCcrcBl88Dsc");
+            System.out.println("连接成功");
+            //查看服务是否运行
+            System.out.println("服务正在运行: " + jedis.ping());
+
+            System.out.println(jedis.get("fgfkkk"));
+
+
+            Object list_len = jedis.lpush("msgx",req.getParameter("msg"));
+
+
+            System.out.println(list_len);
+
+            return list_len;
+        },tomcat, ctx_webapp);
+
+
+
 
 //==>/im-biz/news/category
 
 
         //   ActionContext.getActionContext().
-
-
-
-
-
-
-
-
-
 
 
         //-------------------------------api1
@@ -199,8 +208,8 @@ public class TmctEmbd {
     }
 
     private static void postx(String path, AbstractAction act1, Tomcat tomcat, Context ctxWebapp) {
-      //  FilterDispatcherMydspt.pathMap.put(path,act1);
-        addSvlt(tomcat, ctxWebapp, path,act1);
+        //  FilterDispatcherMydspt.pathMap.put(path,act1);
+        addSvlt(tomcat, ctxWebapp, path, act1);
     }
 
     private static void addFltr(Context ctx_webapp) {
@@ -219,12 +228,10 @@ public class TmctEmbd {
         ctx_webapp.addFilterMap(filter1mapping);
 
 
-
-
         FilterDef filter1definition_encode = new FilterDef();
 
-        filter1definition_encode.setFilterName( com.webkit.web.filter.CharacterEncodingFilter.class.getSimpleName());
-        filter1definition_encode.setFilterClass( com.webkit.web.filter.CharacterEncodingFilter.class.getName());
+        filter1definition_encode.setFilterName(com.webkit.web.filter.CharacterEncodingFilter.class.getSimpleName());
+        filter1definition_encode.setFilterClass(com.webkit.web.filter.CharacterEncodingFilter.class.getName());
 
         ctx_webapp.addFilterDef(filter1definition_encode);
         FilterMap filter1mapping_encode = new FilterMap();
@@ -274,6 +281,7 @@ public class TmctEmbd {
                 resp.getWriter().write("use post ");
                 resp.getWriter().flush();
             }
+
             protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
                 //  System.out.println("------>ext svlt:"+svltname);
@@ -290,16 +298,16 @@ public class TmctEmbd {
     }
 
 
-    private static void setGetM(Tomcat tomcat, Context ctx_webapp, String pattern_svltpath ,  Route route
-                                ) {
-        String svltname =  UUID.randomUUID().toString();
+    private static void setGetM( String pattern_svltpath, Route route,
+    Tomcat tomcat, Context ctx_webapp) {
+        String svltname = UUID.randomUUID().toString();
         tomcat.addServlet(ctx_webapp, svltname, new HttpServlet() {
 
             protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 
-                    resp.getWriter().write(  (String) route.handle( req,  resp));
-                    resp.getWriter().flush();
+                resp.getWriter().write(  route.handle(req, resp).toString());
+                resp.getWriter().flush();
 
             }
 
