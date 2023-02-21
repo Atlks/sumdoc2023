@@ -13,13 +13,13 @@ import java.text.DateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class imCls {
+public class imCls_netdb {
     //shiti user msg grp
 
-    public static String storeFldr = "d:/dbstore";
+    public static String storeFldr = "d:/dbstore_netmode";
 
     public static void main(String[] args) throws Exception {
-        // reg("woshish", "pwd123");
+        //    reg("ati", "pwd123");
         login("ati", "pwd123");
 
 
@@ -27,23 +27,25 @@ public class imCls {
         addFrdList("frd2");
         addFrdList("frd3");
 
+        System.out.println("============> show flrlst:");
+        System.out.println(JSONObject.toJSONString(showFrdList(), true));
 
-        System.out.println(JSONObject.toJSONString(showFrdList()));
-
-
-        addGrp("grp11");
-        addGrp("grp12");
-
-        System.out.println(JSONObject.toJSONString(showGrpList()));
-
-
+        System.out.println("============> send msg:");
         sendmsg("duifeo1", "msg11");
         sendmsg("duifeo1", "msg12222");
         sendmsg("duifeo2", "msg11");
-        System.out.println(JSONObject.toJSONString(showChatMsg("duifeo1")));
-        System.out.println(JSONObject.toJSONString(showChatMsg("duifeo2")));
-        sendmsgToGrp("grp1","msgx......");
-        System.out.println(JSONObject.toJSONString(showChatMsgGroup("grp1")));
+
+        System.out.println("============> show frd msgs:");
+        System.out.println(JSONObject.toJSONString(showChatMsg("duifeo1"), true));
+        //       System.out.println(JSONObject.toJSONString(showChatMsg("duifeo2")));
+
+
+//        //        addGrp("grp11");
+////        addGrp("grp12");
+////
+////        System.out.println(JSONObject.toJSONString(showGrpList()));
+//        sendmsgToGrp("grp1","msgx......");
+//        System.out.println(JSONObject.toJSONString(showChatMsgGroup("grp1")));
 
 
     }
@@ -57,19 +59,18 @@ public class imCls {
         Map m = Maps.newConcurrentMap();
         m.put("msg", msg11);
         m.put("from", curUname);
-        m.put("to", "_grp_"+grp1);
+        m.put("to", "_grp_" + grp1);
         m.put("time", new Date());
         m.put("addTime_rdable", getDatetimex());
 
-        String msgFilename ="msg_"+ new Date().toString().replaceAll(":", ".");
+        String msgFilename = "msg_" + new Date().toString().replaceAll(":", ".");
         String coll_biz = "msg_grp_" + grp1;
-        String accpath = storeFldr + "/" +curUname + "/"  + coll_biz + "/" + msgFilename + ".txt";
+        String accpath = storeFldr + "/" + curUname + "/" + coll_biz + "/" + msgFilename + ".txt";
         FileUtils.writeStringToFile(new File(accpath), JSONObject.toJSONString(m) + "\r\n");
     }
 
     private static void sendmsg(String duifeo1, String msg11) throws IOException {
         String curUname = "ati";     //aesDecode_cookie();
-        String db = storeFldr + "/" + curUname;
 
 
         Map m = Maps.newConcurrentMap();
@@ -79,9 +80,11 @@ public class imCls {
         m.put("time", new Date());
         m.put("addTime_rdable", getDatetimex());
 
-        String msgFilename ="msg_"+ new Date().toString().replaceAll(":", ".")+" "+System.currentTimeMillis();
-        String coll_biz = "msg_" + duifeo1;
-        String accpath = storeFldr + "/" +curUname + "/" + coll_biz + "/" + msgFilename + ".txt";
+
+        String node = "msgFrom_rlt_ati_" + duifeo1;
+        String msgFilename = "msg_" + new Date().toString().replaceAll(":", ".") + " " + System.currentTimeMillis();
+
+        String accpath = storeFldr + "/" + node + "/" + msgFilename + ".json";
         FileUtils.writeStringToFile(new File(accpath), JSONObject.toJSONString(m) + "\r\n");
 
     }
@@ -91,13 +94,12 @@ public class imCls {
         String curUname = "ati";     //aesDecode_cookie();
 
 
-
         Map m = Maps.newConcurrentMap();
         m.put("grpname", grp12);
         m.put("addTime", new Date());
         m.put("addTime_rdable", getDatetimex());
 
-        String accpath = storeFldr + "/" +curUname+ "/grpLst" + "/" + grp12 + ".txt";
+        String accpath = storeFldr + "/" + curUname + "/grpLst" + "/" + grp12 + ".txt";
         FileUtils.writeStringToFile(new File(accpath), JSONObject.toJSONString(m) + "\r\n");
     }
 
@@ -108,14 +110,14 @@ public class imCls {
         Map m = Maps.newConcurrentMap();
         m.put("uname", frd2);
         m.put("addFrdTime", new Date());
-        m.put("addFrdTime", new Date());
-
-
         String dttm = getDatetimex();
         m.put("addFrdTime_rdable", dttm);
 
-        String accpath = storeFldr + "/" +curUname+ "/" + "frdLst" + "/" + frd2 + ".txt";
-        FileUtils.writeStringToFile(new File(accpath), JSONObject.toJSONString(m) + "\r\n");
+        //add rlt ...is use jo obj txt too troulbe  ,,fldr mode is better easy
+
+        String path = storeFldr + "/user_" + curUname + "_rlts";
+        String accpath = path + "/" + frd2 + ".json";
+        writeStrToFilFrmObj(accpath, m);
 
 
     }
@@ -126,7 +128,7 @@ public class imCls {
         String curUname = "ati";     //aesDecode_cookie();
         String coll = "msg_grp_" + grpName;
         String accpath = storeFldr + "/" + curUname + "/" + coll;
-        List li  = getListFrmCollpath(accpath);
+        List li = getListFrmCollpath(accpath);
 
 
         //   System.out.println( JSONObject.toJSONString(li) );
@@ -138,9 +140,10 @@ public class imCls {
 
         String curUname = "ati";     //aesDecode_cookie();
 
-        String coll = "msg_" + duifeoUname;
-        String accpath = storeFldr + "/" + curUname + "/" + coll;
-        List li  = getListFrmCollpath(accpath);
+
+        String node = "msgFrom_rlt_ati_" + duifeoUname;
+
+        List li = getListFrmCollpath(storeFldr + "/" + node);
 
 
         //   System.out.println( JSONObject.toJSONString(li) );
@@ -153,17 +156,12 @@ public class imCls {
         String curUname = "ati";     //aesDecode_cookie();
 
         String coll = "grpLst";
-
         List li = Lists.newArrayList();
         String accpath = storeFldr + "/" + curUname + "/" + coll;
-
         li = getListFrmCollpath(accpath);
-
-
         //  System.out.println( JSONObject.toJSONString(li) );
         return li;
     }
-
 
 
     private static Object showFrdList() throws IOException {
@@ -171,7 +169,8 @@ public class imCls {
         String curUname = "ati";     //aesDecode_cookie();
 
         String coll = "frdLst";
-        String accpath = storeFldr + "/" + curUname + "/" + coll;
+        String accpath = storeFldr + "/user_" + curUname + "_rlts";
+
         List li = getListFrmCollpath(accpath);
 
 
@@ -180,43 +179,43 @@ public class imCls {
     }
 
     private static void login(String uname, String pwdd) throws Exception {
-        String accpath = storeFldr + "/" + uname + "/uinfo.txt";
+
+        // db/shititype
+        String accpath = storeFldr + "/" + "user_" + uname + ".json";
         ReversedLinesFileReader reversedLinesReader = new ReversedLinesFileReader(new File(accpath), Charset.defaultCharset());
         String uinfo_str = reversedLinesReader.readLine();
         JSONObject jo = JSONObject.parseObject(uinfo_str);
         if (!pwdd.equals(jo.get("pwd")))
             throw new RuntimeException("pwd err");
+        //gene token  uname,id,date,,exprise date
 
     }
 
     private static void reg(String uname, String pwd) throws Exception {
-        if (new File(storeFldr + "/" + uname).exists())
+
+        // db/shititype
+        String accpath = storeFldr + "/" + "user_" + uname + ".json";
+        if (new File(accpath).exists())
             throw new RuntimeException("alread reged");
         Map m = Maps.newConcurrentMap();
         m.put("uname", uname);
         m.put("pwd", pwd);
 
         // uid/biz
-        String accpath=storeFldr + "/" + uname + "/uinfo"+".txt";
+
         FileUtils.writeStringToFile(new File(accpath), JSONObject.toJSONString(m));
     }
 
 
     private static List getListFrmCollpath(String collpath) {
-        List li;
+
         File[] lst_fls = new File(collpath).listFiles();
-        li = Arrays.stream(lst_fls).map((File f) -> {
-            try {
-                String t = FileUtils.readFileToString(f);
-                JSONObject jo = JSONObject.parseObject(t);
-                return jo;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+
+        return Arrays.stream(lst_fls).map((File f) -> {
+            return readFileToJsonobj_safe(f.getAbsolutePath());
 
 
         }).collect(Collectors.toList());
-        return li;
     }
 
 
@@ -229,6 +228,27 @@ public class imCls {
 
         String dttm = date3 + " " + time3;
         return dttm;
+    }
+
+
+    private static void writeStrToFilFrmObj(String f, Object o) throws IOException {
+
+        FileUtils.writeStringToFile(new File(f), JSONObject.toJSONString(o) + "\r\n");
+    }
+
+    private static JSONObject readFileToJsonobj(String f) throws IOException {
+        String txt = FileUtils.readFileToString(new File(f), "utf8");
+        JSONObject jo = JSONObject.parseObject(txt);
+        return jo;
+    }
+
+    private static JSONObject readFileToJsonobj_safe(String f) {
+        try {
+
+            return readFileToJsonobj(f);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
