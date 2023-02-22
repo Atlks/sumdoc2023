@@ -31,6 +31,7 @@ import com.im.filter.SignitureValidFilter;
 import com.webkit.web.FilterDispatcher;
 
 import com.webkit.web.filter.CharacterEncodingFilter;
+import lombok.SneakyThrows;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardContext;
@@ -140,7 +141,7 @@ public class TmctEmbd {
             //连接本地的 Redis 服务
             Jedis jedis = new Jedis("localhost");
             // 如果 Redis 服务设置了密码，需要下面这行，没有就不需要
-            jedis.auth("kPrbMjTIrCcrcBl88Dsc");
+            jedis.auth("");
             System.out.println("连接成功");
             //查看服务是否运行
             System.out.println("服务正在运行: " + jedis.ping());
@@ -162,7 +163,7 @@ public class TmctEmbd {
             //连接本地的 Redis 服务
             Jedis jedis = new Jedis("localhost");
             // 如果 Redis 服务设置了密码，需要下面这行，没有就不需要
-            jedis.auth("kPrbMjTIrCcrcBl88Dsc");
+            jedis.auth("");
             System.out.println("连接成功");
             //查看服务是否运行
             System.out.println("服务正在运行: " + jedis.ping());
@@ -303,6 +304,7 @@ public class TmctEmbd {
         String svltname = UUID.randomUUID().toString();
         tomcat.addServlet(ctx_webapp, svltname, new HttpServlet() {
 
+            @SneakyThrows
             protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 
