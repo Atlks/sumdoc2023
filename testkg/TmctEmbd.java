@@ -31,6 +31,7 @@ import com.im.filter.SignitureValidFilter;
 import com.webkit.web.FilterDispatcher;
 
 import com.webkit.web.filter.CharacterEncodingFilter;
+import lombok.SneakyThrows;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardContext;
@@ -303,6 +304,7 @@ public class TmctEmbd {
         String svltname = UUID.randomUUID().toString();
         tomcat.addServlet(ctx_webapp, svltname, new HttpServlet() {
 
+            @SneakyThrows
             protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 

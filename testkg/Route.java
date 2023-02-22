@@ -5,6 +5,7 @@ import spark.Response;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @FunctionalInterface
 public interface Route {
@@ -17,6 +18,6 @@ public interface Route {
      * @return The content to be set in the response
      * @throws java.lang.Exception implementation can choose to throw exception
      */
-    Object handle(HttpServletRequest req, HttpServletResponse resp)  ;
+    Object handle(HttpServletRequest req, HttpServletResponse resp) throws Exception;
 
 }
