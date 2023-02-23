@@ -304,12 +304,17 @@ public class TmctEmbd {
         String svltname = UUID.randomUUID().toString();
         tomcat.addServlet(ctx_webapp, svltname, new HttpServlet() {
 
-            @SneakyThrows
-            protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+            protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
 
 
-                resp.getWriter().write(  route.handle(req, resp).toString());
-                resp.getWriter().flush();
+                try {
+                    resp.getWriter().write(  route.handle(req, resp).toString());
+                    resp.getWriter().flush();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
 
             }
 

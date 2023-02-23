@@ -4,59 +4,63 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
+
 import static testkg.ImUtil.*;
+import static testkg.TmctUtil.*;
+import static testkg.AuthUtil.*;
+
 
 public class imCls_codlib {
     //shiti user msg grp
 
     public static String storeFldr = "d:/dbstore_codelib";
 
+
     public static void main(String[] args) throws Exception {
 
-        Tomcat tomcat = new Tomcat();
-        tomcat.getHost().setAutoDeploy(true);
-        tomcat.setPort(8888);
+        AuthUtil.storeFldr=storeFldr;
+         String v= new String( Base64.getEncoder().encode(("curUname:pwd").getBytes()) );
 
-        //-------------add ctx
+        Tomcat tomcat = getTomcat(8888);
 
         Context ctx_webapp = tomcat.addContext("/", "D:\\im-server-core\\im-biz\\target\\");
-        //  addWEbapp 更麻烦解压缩war包会
 
 
         // http://localhost:8888/reg?uname=ati&pwd=ppp
-        TmctUtil.setGetM("/reg", regv3(), tomcat, ctx_webapp);
+        setGetM("/reg", regv3(), tomcat, ctx_webapp);
 
         // http://localhost:8888/login?uname=ati&pwd=ppp
-        TmctUtil.setGetM("/login", loginv3(), tomcat, ctx_webapp);
+        setGetM("/login", loginv3(), tomcat, ctx_webapp);
 
         // http://localhost:8888/login?uname=ati&pwd=ppp
-        TmctUtil.setGetM("/addFrd", addFrdv2(), tomcat, ctx_webapp);
-        TmctUtil.setGetM("/frdLst", frdLst(), tomcat, ctx_webapp);
+        setGetM("/addFrd", addFrdv2(), tomcat, ctx_webapp);
+        setGetM("/frdLst", frdLst(), tomcat, ctx_webapp);
 
-        TmctUtil.setGetM("/sendmsgToFrd", sendmsgToFrd(), tomcat, ctx_webapp);
-        TmctUtil.setGetM("/showChatMsgWithFrd", showChatMsgWithFrd(), tomcat, ctx_webapp);
+        setGetM("/sendmsgToFrd", sendmsgToFrd(), tomcat, ctx_webapp);
+        setGetM("/showChatMsgWithFrd", showChatMsgWithFrd(), tomcat, ctx_webapp);
 
-        TmctUtil.setGetM("/sendmsgToGrp", sendmsgToGrp(), tomcat, ctx_webapp);
-        TmctUtil.setGetM("/showChatMsgFrmGrp", showChatMsgFrmGrp(), tomcat, ctx_webapp);
+        setGetM("/sendmsgToGrp", sendmsgToGrp(), tomcat, ctx_webapp);
+        setGetM("/showChatMsgFrmGrp", showChatMsgFrmGrp(), tomcat, ctx_webapp);
 
+        tomcat_start_await(tomcat);
 
-        tomcat.start();
-        tomcat.getServer().await();
 
 
 
 
     }
+
+
 
     private static Route showChatMsgFrmGrp() {
 
@@ -81,12 +85,12 @@ public class imCls_codlib {
 
 
 
-
+  //        /// ajax can trans   ?accpath=msgs_$cur_wz_frd_msgs|msgs_frd_wz_$cur_msgs
         return (req, res) -> {
 
             String curUname = req.getParameter("uname");     //aesDecode_cookie();
 
-            checkAuth(curUname, req.getParameter("pwd"));
+            checkAuth(req);
 
             String frd = req.getParameter("frd");
 
@@ -107,23 +111,16 @@ public class imCls_codlib {
 
             String curUname = req.getParameter("uname");     //aesDecode_cookie();
 
-            checkAuth(curUname, req.getParameter("pwd"));
+            checkAuth(req);
 
 
             String toFrd = req.getParameter("frd");
 
 
-
-
-
-
-            String msgFilename = "msg_" + new Date().toString().replaceAll(":", ".") + " " + System.currentTimeMillis();
-
-
             // send and rvcv same msg dir..
-            String dir = wzFrdMsgDir(curUname, toFrd);
-
-            String accpath =dir+ "/" + msgFilename + ".json";
+            String coll_dir = wzFrdMsgDir(curUname, toFrd);
+            String msgFilename = "msg_" + filNameTimebase();
+            String accpath =coll_dir+ "/" + msgFilename + ".json";
 
             writeStrToFilFrmObj(accpath,new HashMap(){{
 
@@ -139,69 +136,30 @@ return 0;
         };
     }
 
+
+
     private static String wzFrdMsgDir(String curUname, String toFrd) {
+
+
         String dir=storeFldr + "/msgs_" + toFrd + "_wz_"+ curUname +"_msgs";
-        if(!new File((dir)).exists())
-            dir =storeFldr + "/msgs_" + curUname + "_wz_"+ toFrd +"_msgs" ;
-        return dir;
+
+        return new File((dir)).exists()?dir:storeFldr + "/msgs_" + curUname + "_wz_"+ toFrd +"_msgs";
     }
 
     private static Route frdLst() {
 
-
+     /// ajax can trans   ?accpath=user_&curuser_frds
         return (req, res) -> {
 
-            String curUname = req.getParameter("uname");     //aesDecode_cookie();
+            checkAuth(req);
 
-            checkAuth(curUname, req.getParameter("pwd"));
-
-
-
-            String accpath = storeFldr + "/" + "user_" + curUname + "_frds";
+        String accpath = storeFldr + "/" + "user_" + req.getParameter("uname") + "_frds";
             return    getListFrmCollpath(accpath);
         };
 
 
     }
 
-    private static Route regv3() {
-        return (req, res) -> {
-
-            String uname = req.getParameter("uname");
-            String pwd = req.getParameter("pwd");
-
-            String accpath = storeFldr + "/" + "user_" + uname + ".json";
-            if (new File(accpath).exists())
-                throw new RuntimeException("alread reged");
-
-            writeStrToFilFrmObj(accpath, new HashMap() {{
-                put("uname", uname);
-
-                put("pwd", pwd);
-            }});
-            return 0;
-        };
-    }
-
-    private static Route loginv3() {
-        return (req, res) -> {
-
-            String uname = req.getParameter("uname");
-            String pwd = req.getParameter("pwd");
-
-            // db/shititype
-            String accpath = storeFldr + "/" + "user_" + uname + ".json";
-            ReversedLinesFileReader reversedLinesReader = new ReversedLinesFileReader(new File(accpath), Charset.defaultCharset());
-            String uinfo_str = reversedLinesReader.readLine();
-            JSONObject jo = JSONObject.parseObject(uinfo_str);
-            if (!pwd.equals(jo.get("pwd")))
-                throw new RuntimeException("pwd err");
-            //gene token  uname,id,date,,exprise date
-            //login dont need gene token,just use uname_pwd  as key to acc another api just ok..
-
-            return 0;
-        };
-    }
 
     private static Route addFrdv2() {
         return (req, res) -> {
@@ -209,7 +167,7 @@ return 0;
 
             String curUname = req.getParameter("uname");     //aesDecode_cookie();
 
-            checkAuth(curUname, req.getParameter("pwd"));
+            checkAuth(req);
 
             //add rlt ...is use jo obj txt too troulbe  ,,fldr mode is better easy
 
@@ -226,20 +184,6 @@ return 0;
         };
     }
 
-    private static void checkAuth(String uname, String pwd) throws Exception {
-
-        // db/shititype
-        String accpath = storeFldr + "/" + "user_" + uname + ".json";
-        ReversedLinesFileReader reversedLinesReader = new ReversedLinesFileReader(new File(accpath), Charset.defaultCharset());
-        String uinfo_str = reversedLinesReader.readLine();
-        JSONObject jo = JSONObject.parseObject(uinfo_str);
-        if (!pwd.equals(jo.get("pwd")))
-            throw new RuntimeException("pwd err");
-        //gene token  uname,id,date,,exprise date
-        //login dont need gene token,just use uname_pwd  as key to acc another api just ok..
-
-
-    }
 
 
     private static Route sendmsgToGrp() throws IOException {
@@ -251,15 +195,16 @@ return 0;
 
             String curUname = req.getParameter("uname");     //aesDecode_cookie();
 
-            checkAuth(curUname, req.getParameter("pwd"));
+            checkAuth(req);
 
             //add rlt ...is use jo obj txt too troulbe  ,,fldr mode is better easy
 
             String grp1 = req.getParameter("grp");
-            String msgFilename = "msg_" + new Date().toString().replaceAll(":", ".");
+            String msgFilename = "msg_" +filNameTimebase();
 
             String coll = "msg_grpmsg_" + grp1+"/"+getDate();
             String accpath = storeFldr + "/" + coll + "/" + msgFilename + ".json";
+
 
 
             return  writeStrToFilFrmObj(accpath, new HashMap() {{

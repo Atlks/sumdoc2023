@@ -14,7 +14,9 @@ import java.util.stream.Collectors;
 
 public class ImUtil {
 
-
+    public static String filNameTimebase() {
+        return new Date().toString().replaceAll(":", ".") + " " + System.currentTimeMillis();
+    }
 
     public static List getListFrmCollpath(String collpath) {
 

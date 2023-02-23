@@ -12,6 +12,25 @@ import java.util.UUID;
 
 public class TmctUtil {
 
+
+    public static Tomcat getTomcat(int port) {
+        Tomcat tomcat = new Tomcat();
+        //     tomcat.getHost().setAutoDeploy(true);
+        tomcat.setPort(port);
+
+
+        //-------------add ctx
+
+    //    Context ctx_webapp = tomcat.addContext("/", "D:\\im-server-core\\im-biz\\target\\");
+        //  addWEbapp 更麻烦解压缩war包会
+        return tomcat;
+    }
+    public static void tomcat_start_await(Tomcat tomcat) throws  Exception {
+        tomcat.start();
+        tomcat.getServer().await();
+    }
+
+
     public static void setGetM(String pattern_svltpath, Route route,
                                Tomcat tomcat, Context ctx_webapp) {
         String svltname = UUID.randomUUID().toString();
