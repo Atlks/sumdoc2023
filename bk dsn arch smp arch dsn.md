@@ -7,6 +7,14 @@ bk dsn arch smp arch dsn perf ha ext smp rdable
 - [从ui net db 将强](#从ui-net-db-将强)
 - [frm lan lib ide  smpl](#frm-lan-lib-ide--smpl)
 - [从fun功能实现保证简单性](#从fun功能实现保证简单性)
+- [-----------------------------具体arch](#-----------------------------具体arch)
+- [prgrmlan js python ,bizdsl sql](#prgrmlan-js-python-bizdsl-sql)
+- [net http get](#net-http-get)
+- [file rds mgdb store](#file-rds-mgdb-store)
+- [svrles ,sql as bizlan crud  vs urlExprs](#svrles-sql-as-bizlan-crud--vs-urlexprs)
+- [ui list same dblist  ,jji fenbiao](#ui-list-same-dblist--jji-fenbiao)
+- [no invoke lev<2     biz<util model](#no-invoke-lev2-----bizutil-model)
+- [josn ext dt... schma less](#josn-ext-dt-schma-less)
 
 <!-- /TOC -->
 
@@ -41,5 +49,37 @@ h5 scrpt sql yml json
 im sys
 
 
+# -----------------------------具体arch
 
 
+
+# prgrmlan js python ,bizdsl sql
+druid to parse sql..backend nosql..so no inject rsk
+
+# net http get
+
+# file rds mgdb store
+ 
+# svrles ,sql as bizlan crud  vs urlExprs
+
+
+bk dsn biz lan sql curd  bizlan 
+
+
+
+?op=update dt1 set stat=ok where  id1==2344
+use sql as embd dsl....good...
+
+better than url model...
+so  srvles........
+
+
+db storn use rds and mgdb,,and file..so no inject risk...
+
+#
+
+# ui list same dblist  ,jji fenbiao
+
+# no invoke lev<2     biz<util model
+
+# josn ext dt... schma less

@@ -1,0 +1,13 @@
+bk dsn biz lan sql curd  bizlan 
+
+
+
+?op=update dt1 set stat=ok where  id1==2344
+use sql as embd dsl....good...
+
+better than url model...
+so  srvles........
+
+
+db storn use rds and mgdb,,and file..so no inject risk...
+
