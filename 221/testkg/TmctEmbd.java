@@ -14,6 +14,7 @@ import com.im.action.news.CategoryAction;
 import com.im.action.news.NewsAction;
 import com.im.action.news.NewsFlashAction;
 import com.im.action.payment.GetOrderDetailAction;
+import com.im.action.payment.GetOrderListAction;
 import com.im.action.payment.GetPayTypeAction;
 import com.im.action.payment.SendPendingOrderAction;
 import com.im.action.redpacket.AddRedPacketAction;
@@ -31,6 +32,7 @@ import com.im.filter.SignitureValidFilter;
 import com.webkit.web.FilterDispatcher;
 
 import com.webkit.web.filter.CharacterEncodingFilter;
+import lombok.SneakyThrows;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardContext;
@@ -135,12 +137,14 @@ public class TmctEmbd {
         postx("/im-biz/payment/sendPendingOrder", new SendPendingOrderAction(), tomcat, ctx_webapp);
         postx("/im-biz/payment/getOrderDetailAction", new GetOrderDetailAction(), tomcat, ctx_webapp);
 
+        postx("/im-biz/payment/getOrderList", new GetOrderListAction(), tomcat, ctx_webapp);
+
 
         setGetM( "/rcv", (req, res) -> {
             //连接本地的 Redis 服务
             Jedis jedis = new Jedis("localhost");
             // 如果 Redis 服务设置了密码，需要下面这行，没有就不需要
-            jedis.auth("kPrbMjTIrCcrcBl88Dsc");
+            jedis.auth("");
             System.out.println("连接成功");
             //查看服务是否运行
             System.out.println("服务正在运行: " + jedis.ping());
@@ -162,7 +166,7 @@ public class TmctEmbd {
             //连接本地的 Redis 服务
             Jedis jedis = new Jedis("localhost");
             // 如果 Redis 服务设置了密码，需要下面这行，没有就不需要
-            jedis.auth("kPrbMjTIrCcrcBl88Dsc");
+            jedis.auth("");
             System.out.println("连接成功");
             //查看服务是否运行
             System.out.println("服务正在运行: " + jedis.ping());
@@ -303,11 +307,17 @@ public class TmctEmbd {
         String svltname = UUID.randomUUID().toString();
         tomcat.addServlet(ctx_webapp, svltname, new HttpServlet() {
 
-            protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+            protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
 
 
-                resp.getWriter().write(  route.handle(req, resp).toString());
-                resp.getWriter().flush();
+                try {
+                    resp.getWriter().write(  route.handle(req, resp).toString());
+                    resp.getWriter().flush();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
 
             }
 
