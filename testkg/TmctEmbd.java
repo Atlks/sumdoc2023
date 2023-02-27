@@ -14,6 +14,7 @@ import com.im.action.news.CategoryAction;
 import com.im.action.news.NewsAction;
 import com.im.action.news.NewsFlashAction;
 import com.im.action.payment.GetOrderDetailAction;
+import com.im.action.payment.GetOrderListAction;
 import com.im.action.payment.GetPayTypeAction;
 import com.im.action.payment.SendPendingOrderAction;
 import com.im.action.redpacket.AddRedPacketAction;
@@ -135,6 +136,8 @@ public class TmctEmbd {
         postx("/im-biz/redpacket/redPacketTemplateList", new RedPacketTemplateListAction(), tomcat, ctx_webapp);
         postx("/im-biz/payment/sendPendingOrder", new SendPendingOrderAction(), tomcat, ctx_webapp);
         postx("/im-biz/payment/getOrderDetailAction", new GetOrderDetailAction(), tomcat, ctx_webapp);
+
+        postx("/im-biz/payment/getOrderList", new GetOrderListAction(), tomcat, ctx_webapp);
 
 
         setGetM( "/rcv", (req, res) -> {
