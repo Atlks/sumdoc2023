@@ -11,6 +11,8 @@ bk dsn slpdsn
 - [in rds use cenci mdl](#in-rds-use-cenci-mdl)
     - [in mysql use cenci mdl](#in-mysql-use-cenci-mdl)
     - [in fldr use cenci mdl](#in-fldr-use-cenci-mdl)
+- [other](#other)
+    - [利用事件简化系统架构设计模式 - InfoQ](#利用事件简化系统架构设计模式---infoq)
 
 <!-- /TOC -->
 
@@ -36,3 +38,8 @@ from histroy ,more easy,,,
 ## in mysql use cenci mdl
 
 ## in fldr use cenci mdl
+
+
+# other
+
+## 利用事件简化系统架构_设计模式 - InfoQ
