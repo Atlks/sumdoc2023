@@ -1,0 +1,24 @@
+
+txt file
+   file_put_contents("dbg815.txt",json_encode( $ossClient)."\r\n",FILE_APPEND );
+
+
+
+bin file
+
+
+
+
+
+            $fh = fopen($content->getLinkTarget(), "rb");
+//仅读取前面的8个字节
+$file_conBin = fread($fh, filesize($content->getLinkTarget()));
+fclose($fh);
+
+
+   $handle = fopen("ot1236.txt","w+");
+         fwrite($handle,   $content );
+        fclose(  $handle );
+
+
+C:\w\frt\mdm-api\application\api\controller\Upld.php
